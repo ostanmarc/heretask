@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Heretestapp</string>
+
+    <string name="default_search_string_value">Where to?</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="action_settings">Settings</string>
 </resources>

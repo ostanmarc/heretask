@@ -1,8 +1,11 @@
 package com.ostan.heretestapp.screens.mainscreen;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.location.Location;
 import android.view.View;
+
+import com.ostan.heretestapp.screens.searchscreen.SearchActivity;
 
 /**
  * Created by marco on 16/12/2016.
@@ -42,7 +45,8 @@ public class MapPresenterImpl implements IMapPresenter, IMapPresenterActivityCal
 
     @Override
     public void onAddressButtonClicked() {
-
+        Intent intent = new Intent(activity, SearchActivity.class);
+        activity.startActivityForResult(intent, 1);
     }
 
     @Override

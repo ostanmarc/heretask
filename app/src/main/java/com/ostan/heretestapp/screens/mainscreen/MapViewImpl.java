@@ -1,12 +1,14 @@
 package com.ostan.heretestapp.screens.mainscreen;
 
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.location.Location;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.here.android.mpa.common.GeoCoordinate;
@@ -17,6 +19,7 @@ import com.ostan.heretestapp.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by marco on 16/12/2016.
@@ -37,13 +40,29 @@ public class MapViewImpl implements IMapView {
     @BindView(R.id.status_update_tv)
     TextView statusTv;
 
+    @BindView(R.id.address_tv)
+    TextView addressLine;
 
-    public MapViewImpl(Activity activity, IMapPresenter presenter, View view) {
+    @BindView(R.id.addresstv_holder)
+    RelativeLayout address_loder;
 
+    @BindView(R.id.navigation_trigger)
+    ImageButton navigationTrigger;
 
+    @OnClick({R.id.addresstv_holder, R.id.address_tv})
+    public void addressClicked(){
+        presenter.onAddressButtonClicked();
+    }
+
+    @OnClick(R.id.navigation_trigger)
+    public void navigationClicked(){
+        presenter.onDirectionsClicked();
+    }
+
+    public MapViewImpl(AppCompatActivity activity, IMapPresenter presenter, View view) {
         this.fragmentManager = activity.getFragmentManager();
-        ButterKnife.bind(this, view);
 
+        ButterKnife.bind(this, activity);
         this.presenter = presenter;
     }
 
@@ -120,5 +139,8 @@ public class MapViewImpl implements IMapView {
             }
         });
     }
+
+
+
 
 }

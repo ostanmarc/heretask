@@ -5,7 +5,11 @@ import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -34,7 +38,7 @@ public class MapActivity extends AppCompatActivity implements PermissionsHandler
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
+        handleActionBar(this);
         ButterKnife.bind(this);
         // Check for the permissions each time we load the app
         permissionsHandler = new PermissionsHandler(this);
@@ -84,5 +88,18 @@ public class MapActivity extends AppCompatActivity implements PermissionsHandler
                 activityCallback.onNewLocationRecieved(loc);
             }
         });
+    }
+
+    private void handleActionBar(AppCompatActivity activity) {
+
+        LayoutInflater inflater = LayoutInflater.from(activity);
+
+        android.support.v7.app.ActionBar actionBar = activity.getSupportActionBar();
+
+        View view = inflater.inflate(R.layout.action_bar_layout, null);
+        actionBar.setCustomView(view, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT));
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setTitle("");
+
     }
 }
