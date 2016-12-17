@@ -1,6 +1,6 @@
 package com.ostan.heretestapp.screens.searchscreen;
 
-import com.ostan.heretestapp.models.AddressObject;
+import com.ostan.heretestapp.models.AutoSuggestResult;
 
 import java.util.List;
 
@@ -9,5 +9,5 @@ import java.util.List;
  */
 
 public interface ISearchView {
-    public void updateResults(List<AddressObject> results);
+    public void updateResults(List<AutoSuggestResult> results);
 }

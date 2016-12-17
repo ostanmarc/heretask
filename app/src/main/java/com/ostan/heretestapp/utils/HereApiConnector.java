@@ -4,7 +4,7 @@ import android.location.Location;
 import android.util.Log;
 
 import com.ostan.heretestapp.models.APIResult;
-import com.ostan.heretestapp.models.AddressObject;
+import com.ostan.heretestapp.models.AutoSuggestResult;
 
 import java.io.IOException;
 import java.util.List;
@@ -77,22 +77,22 @@ public class HereApiConnector {
                 .build();
 
         APIProtocol testService = retrofit.create(APIProtocol.class);
-        Call<APIResult<AddressObject>> call = testService.autoSuggest(querry,
+        Call<APIResult<AutoSuggestResult>> call = testService.autoSuggest(querry,
                 location.getLatitude()+","+location.getLongitude(),
                 AddressResultTypes.getStringFromEnumsList(resultTypes));
 
 
 
-        call.enqueue(new Callback<APIResult<AddressObject>>() {
+        call.enqueue(new Callback<APIResult<AutoSuggestResult>>() {
             @Override
-            public void onResponse(Call<APIResult<AddressObject>> call, Response<APIResult<AddressObject>> response) {
-                for(AddressObject suggestion : response.body().results){
+            public void onResponse(Call<APIResult<AutoSuggestResult>> call, Response<APIResult<AutoSuggestResult>> response) {
+                for(AutoSuggestResult suggestion : response.body().results){
                     Log.i("Log","Address received: "+ suggestion.getTitle());
                 }
             }
 
             @Override
-            public void onFailure(Call<APIResult<AddressObject>> call, Throwable t) {
+            public void onFailure(Call<APIResult<AutoSuggestResult>> call, Throwable t) {
                 t.printStackTrace();
             }
         });

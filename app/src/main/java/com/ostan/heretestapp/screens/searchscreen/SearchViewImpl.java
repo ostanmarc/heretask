@@ -2,7 +2,7 @@ package com.ostan.heretestapp.screens.searchscreen;
 
 import android.view.View;
 
-import com.ostan.heretestapp.models.AddressObject;
+import com.ostan.heretestapp.models.AutoSuggestResult;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class SearchViewImpl implements ISearchView {
     }
 
     @Override
-    public void updateResults(List<AddressObject> results) {
+    public void updateResults(List<AutoSuggestResult> results) {
 
     }
 }

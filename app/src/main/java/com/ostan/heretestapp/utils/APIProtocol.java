@@ -1,7 +1,7 @@
 package com.ostan.heretestapp.utils;
 
 import com.ostan.heretestapp.models.APIResult;
-import com.ostan.heretestapp.models.AddressObject;
+import com.ostan.heretestapp.models.AutoSuggestResult;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -16,6 +16,6 @@ public interface APIProtocol {
     static final String AUTOSUGGEST = "autosuggest/";
 
     @GET(PATH+AUTOSUGGEST)
-    public Call<APIResult<AddressObject>> autoSuggest(@Query("q") String querry, @Query("at") String location, @Query("result_types") String result_types);
+    public Call<APIResult<AutoSuggestResult>> autoSuggest(@Query("q") String querry, @Query("at") String location, @Query("result_types") String result_types);
 
 }

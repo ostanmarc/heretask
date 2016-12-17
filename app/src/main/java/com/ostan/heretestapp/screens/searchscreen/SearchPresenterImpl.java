@@ -2,7 +2,7 @@ package com.ostan.heretestapp.screens.searchscreen;
 
 import android.view.View;
 
-import com.ostan.heretestapp.models.AddressObject;
+import com.ostan.heretestapp.models.AutoSuggestResult;
 
 import java.util.List;
 
@@ -28,12 +28,12 @@ public class SearchPresenterImpl implements ISearchPresenter, ISearchActivityCal
     }
 
     @Override
-    public void onResultClicked(AddressObject selectedResult) {
+    public void onResultClicked(AutoSuggestResult selectedResult) {
 
     }
 
     @Override
-    public void onResultReceived(List<AddressObject> result) {
+    public void onResultReceived(List<AutoSuggestResult> result) {
 
     }
 }
