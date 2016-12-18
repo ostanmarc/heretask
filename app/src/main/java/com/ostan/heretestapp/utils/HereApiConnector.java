@@ -4,13 +4,11 @@ import android.location.Location;
 import android.util.Log;
 
 import com.ostan.heretestapp.pojo.APIResult;
+import com.ostan.heretestapp.pojo.AddressSearchResponse;
 import com.ostan.heretestapp.pojo.AutoSuggestResult;
 import com.ostan.heretestapp.pojo.Item;
-import com.ostan.heretestapp.pojo.AddressSearchResponse;
-import com.ostan.heretestapp.pojo.RoutesSearchResponse;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
 import okhttp3.HttpUrl;
@@ -100,23 +98,6 @@ public class HereApiConnector {
             }
         });
     }
-
-
-    public Observable<RoutesSearchResponse> searchRoutes(Location start, Location destination){
-        APIInterface testService = getReactiveAPIInterfaceInstance(BASE_ROUTES_URL);
-
-        HashMap<String, String> requestData = new HashMap<>();
-        requestData.put("waypoint0", "geo!"+start.getLatitude() + "," + start.getLongitude());
-        requestData.put("waypoint1", "geo!"+destination.getLatitude() + "," + destination.getLongitude());
-        requestData.put("destination_places", "true");
-        requestData.put("mode", "fastest;publicTransport");
-        requestData.put("alternatives", "3");
-        requestData.put("mode", "fastest;publicTransport");
-        requestData.put("routeattributes", "labels");
-
-        return testService.searchRoutes(requestData);
-    }
-
 
 
     public Observable<AddressSearchResponse> searchReactive(String querry, Location location) {

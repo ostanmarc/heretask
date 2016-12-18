@@ -13,7 +13,7 @@ import java.util.List;
  * Created by marco on 11/07/2016.
  */
 public abstract class AbstractSearchResultsViewAdapter<VH extends ItemViewHolder>
-        extends RecyclerView.Adapter<VH> implements ICardsEventsListener{
+        extends RecyclerView.Adapter<VH> implements IResultCardsEventsListener {
 
     protected Context context;
 

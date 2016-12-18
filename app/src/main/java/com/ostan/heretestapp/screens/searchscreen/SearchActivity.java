@@ -18,7 +18,6 @@ import butterknife.ButterKnife;
 public class SearchActivity extends AppCompatActivity {
 
 
-
     public static final String EXTRA_RUNNING_MODE = "runningMode";
     public static final String EXTRA_CURRENT_LOCATION = "currentLocation";
     public static final String EXTRA_DESTINATION_LOCATION = "destinationLocation";
@@ -30,14 +29,15 @@ public class SearchActivity extends AppCompatActivity {
 
     private int resultCode;
 
-    public static enum RunningMode{
+    RunningMode runningMode;
+
+    public static enum RunningMode {
         addressSearch,
-        placeSearch,
-        routeSearch;
+        startPointSearch;
 
 
         public static RunningMode fromInt(int src) {
-            if(src >  RunningMode.values().length
+            if (src > RunningMode.values().length
                     || src <= 0) {
                 return addressSearch;
             }
@@ -53,11 +53,11 @@ public class SearchActivity extends AppCompatActivity {
 
 
         proccessIncomingIntent(getIntent());
-        handleActionBar(this, determineRuningMode(getIntent()));
+        handleActionBar(this, runningMode);
     }
 
-    private RunningMode determineRuningMode(Intent intent){
-       RunningMode mode = (RunningMode) intent.getSerializableExtra(EXTRA_RUNNING_MODE);
+    private RunningMode getRuningMode(Intent intent) {
+        RunningMode mode = (RunningMode) intent.getSerializableExtra(EXTRA_RUNNING_MODE);
         return mode;
     }
 
@@ -68,69 +68,52 @@ public class SearchActivity extends AppCompatActivity {
         android.support.v7.app.ActionBar actionBar = activity.getSupportActionBar();
         View view;
 
+        view = inflater.inflate(R.layout.action_bar_search_layout, null);
 
-        switch (mode){
+        actionBar.setCustomView(view, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT));
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setTitle("");
+
+        EditText et = (EditText) view.findViewById(R.id.address_et);
+
+        switch (mode) {
             case addressSearch:
-            case placeSearch:
-            default:
-            {
-                view = inflater.inflate(R.layout.action_bar_search_layout, null);
-                actionBar.setCustomView(view, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT));
-                actionBar.setDisplayShowCustomEnabled(true);
-                actionBar.setTitle("");
-                EditText et = (EditText) view.findViewById(R.id.address_et);
-                callback.setSearchField(et);
-            }
-            break;
-            case routeSearch:{
-                actionBar.setTitle("Directions: ");
-            }
+                et.setHint(getString(R.string.default_value_destination_address));
+                break;
+            case startPointSearch:
+                et.setHint(getString(R.string.default_value_origin_address));
+                break;
+            default: {}
             break;
         }
-
-
-
-
+        callback.setSearchField(et);
 
 
     }
 
 
-    private void proccessIncomingIntent(Intent intent){
+    private void proccessIncomingIntent(Intent intent) {
         Location location;
-        switch (determineRuningMode(intent)){
-            case addressSearch:{
+        runningMode = getRuningMode(intent);
+        switch (runningMode) {
+            case startPointSearch:
+            case addressSearch: {
                 location = intent.getParcelableExtra(EXTRA_CURRENT_LOCATION);
                 callback = new SearchPresenterImpl(this, findViewById(R.id.search_root_view), location);
 
             }
             break;
-            case routeSearch:{
-                location = intent.getParcelableExtra(EXTRA_CURRENT_LOCATION);
-                Location destination = intent.getParcelableExtra(EXTRA_DESTINATION_LOCATION);
-                callback = new SearchPresenterImpl(this, findViewById(R.id.search_root_view), location, destination);
-
-            }
-            break;
-            case placeSearch: {
-
-            }
-            break;
-
-
-
         }
 
     }
 
-    protected void finishAndNotify(AbstractResponseItem item){
+    protected void finishAndNotify(AbstractResponseItem item) {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_SEARCH_RESULT, item);
+        intent.putExtra(EXTRA_RUNNING_MODE, runningMode);
         setResult(RESULT_OK, intent);
         finish();
     }
-
-
 
 
 }

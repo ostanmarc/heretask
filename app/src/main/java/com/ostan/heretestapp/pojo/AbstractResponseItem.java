@@ -7,6 +7,7 @@ import java.io.Serializable;
  */
 
 public abstract class AbstractResponseItem implements Serializable {
+
     public abstract String getTitle();
     public abstract String getDescription();
 

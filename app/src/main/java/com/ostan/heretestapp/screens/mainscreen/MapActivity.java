@@ -19,14 +19,14 @@ import com.ostan.heretestapp.R;
 import com.ostan.heretestapp.pojo.AbstractResponseItem;
 import com.ostan.heretestapp.pojo.Item;
 import com.ostan.heretestapp.pojo.LocationWrapper;
-import com.ostan.heretestapp.pojo.Route;
 import com.ostan.heretestapp.screens.searchscreen.SearchActivity;
 import com.ostan.heretestapp.utils.PermissionsHandler;
-
 import com.ostan.heretestapp.utils.PositioningHandler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.ostan.heretestapp.screens.searchscreen.SearchActivity.EXTRA_RUNNING_MODE;
 
 public class MapActivity extends AppCompatActivity implements PermissionsHandler.IPermissionDependent {
 
@@ -118,31 +118,27 @@ public class MapActivity extends AppCompatActivity implements PermissionsHandler
         android.support.v7.app.ActionBar actionBar = activity.getSupportActionBar();
 
         View view = inflater.inflate(R.layout.action_bar_map_layout, null);
-        actionBar.setCustomView(view, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT));
+        actionBar.setCustomView(view, new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT));
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setTitle("");
 
     }
 
     private Intent generateRouteSearchIntent(Location currentLocation, Location destination) {
-        Intent intent = generateIntentCurrentLocation(currentLocation, SearchActivity.RunningMode.routeSearch);
+        Intent intent = generateIntentCurrentLocation(currentLocation, SearchActivity.RunningMode.startPointSearch);
         intent.putExtra(SearchActivity.EXTRA_DESTINATION_LOCATION, destination);
         return intent;
     }
 
     private Intent generateIntentCurrentLocation(Location loc, SearchActivity.RunningMode mode) {
         Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
-        intent.putExtra(SearchActivity.EXTRA_RUNNING_MODE, mode);
+        intent.putExtra(EXTRA_RUNNING_MODE, mode);
         intent.putExtra(SearchActivity.EXTRA_CURRENT_LOCATION, loc);
         return intent;
     }
 
-    public void fireAddressSearch(Location location) {
-        startActivityForResult(generateIntentCurrentLocation(location, SearchActivity.RunningMode.addressSearch), SEARCH_REQUEST_CODE);
-    }
-
-    public void fireRouteSearch(Location currentlocation, Location destinationLocation) {
-        startActivityForResult(generateRouteSearchIntent(currentlocation, destinationLocation), SEARCH_REQUEST_CODE);
+    public void fireAddressSearch(Location location, SearchActivity.RunningMode runingMode) {
+        startActivityForResult(generateIntentCurrentLocation(location, runingMode), SEARCH_REQUEST_CODE);
     }
 
     private void proccessReturnedIntent(Intent returnedIntent) {
@@ -152,20 +148,21 @@ public class MapActivity extends AppCompatActivity implements PermissionsHandler
 
         AbstractResponseItem abstractItem = (AbstractResponseItem) returnedIntent.getSerializableExtra(SearchActivity.EXTRA_SEARCH_RESULT);
 
-        if(abstractItem instanceof Item) {
+        if (abstractItem instanceof Item) {
             Item item = (Item) abstractItem;
             if (item == null) {
                 return;
             }
-            activityCallback.onNewLocationRecieved(LocationWrapper.getFromItemObject(item), IMapPresenterActivityCallback.LocationType.searchedLocation);
-        } else if (abstractItem instanceof Route) {
 
-            Route route = (Route) abstractItem;
-            activityCallback.onNewRouteReceived(route);
+            SearchActivity.RunningMode mode = (SearchActivity.RunningMode) returnedIntent.getSerializableExtra(EXTRA_RUNNING_MODE);
+            IMapPresenterActivityCallback.LocationType type =
+                    (mode == SearchActivity.RunningMode.startPointSearch) ?
+                            IMapPresenterActivityCallback.LocationType.currentLocation
+                            : IMapPresenterActivityCallback.LocationType.searchedLocation;
+
+
+            activityCallback.onNewLocationRecieved(LocationWrapper.getFromItemObject(item), type);
         }
-
-
-
 
     }
 }

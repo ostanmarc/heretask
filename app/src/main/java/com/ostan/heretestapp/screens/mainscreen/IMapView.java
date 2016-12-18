@@ -2,7 +2,6 @@ package com.ostan.heretestapp.screens.mainscreen;
 
 import com.here.android.mpa.common.GeoCoordinate;
 import com.ostan.heretestapp.pojo.LocationWrapper;
-import com.ostan.heretestapp.pojo.Route;
 
 /**
  * Created by marco on 16/12/2016.
@@ -39,9 +38,9 @@ public interface IMapView {
     void addMarkerToTheMap(LocationWrapper locationWrapper, IMapPresenterActivityCallback.LocationType type);
 
     /**
-     * Draw provided route on the map
+     * Draw provided routePojo on the map
      * */
-    void drawRoute(Route route);
+    void drawRoute();
 
     /**
      * Show/Hide nearby places search
@@ -60,7 +59,13 @@ public interface IMapView {
      * Set the address line that map is focused on
      * @param  addressLine = text to be inserted
      * */
-    void setAddressLine(String addressLine);
+    void setDestinationAddressTv(String addressLine);
+
+    /**
+     * Set the address line that map is focused on
+     * @param  addressLine = text to be inserted
+     * */
+    void setOriginAddressTv(String addressLine);
 
     /**
      * Show/Hide directions' search trigger

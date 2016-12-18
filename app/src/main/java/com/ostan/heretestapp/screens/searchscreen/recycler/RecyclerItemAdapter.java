@@ -11,7 +11,7 @@ import com.ostan.heretestapp.screens.searchscreen.IAdapterCallback;
 
 
 public class RecyclerItemAdapter
-        extends AbstractSearchResultsViewAdapter implements ICardsEventsListener {
+        extends AbstractSearchResultsViewAdapter implements IResultCardsEventsListener {
 
 
     public RecyclerItemAdapter(final Context context, IAdapterCallback callback) {

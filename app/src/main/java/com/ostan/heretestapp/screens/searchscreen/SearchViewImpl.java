@@ -58,6 +58,7 @@ public class SearchViewImpl implements ISearchView, IAdapterCallback {
 
     @Override
     public void activateQuerryChangesListening(EditText editText) {
+        editText.requestFocus();
 
 
         editText.addTextChangedListener(new TextWatcher() {

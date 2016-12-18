@@ -6,10 +6,8 @@ import android.widget.EditText;
 
 import com.ostan.heretestapp.pojo.AbstractResponseItem;
 import com.ostan.heretestapp.pojo.AddressSearchResponse;
-import com.ostan.heretestapp.pojo.RoutesSearchResponse;
 import com.ostan.heretestapp.screens.searchscreen.recycler.model.AbstractBaseSearchModel;
 import com.ostan.heretestapp.screens.searchscreen.recycler.model.AddressSearchModel;
-import com.ostan.heretestapp.screens.searchscreen.recycler.model.RoutesSearchModel;
 import com.ostan.heretestapp.utils.HereApiConnector;
 
 import java.util.List;
@@ -28,7 +26,6 @@ public class SearchPresenterImpl implements ISearchPresenter, ISearchCallback {
     SearchActivity activity;
     ISearchView view;
     Location currentLocation;
-    Location destinationLocation;
     AbstractBaseSearchModel model;
 
     public SearchPresenterImpl(SearchActivity activity, View view, Location location) {
@@ -36,26 +33,8 @@ public class SearchPresenterImpl implements ISearchPresenter, ISearchCallback {
         this.view = new SearchViewImpl(this, view);
         this.model = new AddressSearchModel(this);
         this.currentLocation = location;
-        onQuerryTextEdited("berliner");
     }
 
-    public SearchPresenterImpl(SearchActivity activity, View view, Location location, Location destinationLocation) {
-        this.activity = activity;
-        this.view = new SearchViewImpl(this, view);
-        this.model = new RoutesSearchModel(this);
-        this.currentLocation = location;
-        this.destinationLocation = destinationLocation;
-        getOptionalRoutes();
-    }
-
-
-    private void getOptionalRoutes(){
-        HereApiConnector connector = new HereApiConnector();
-        Observable<RoutesSearchResponse> call = connector.searchRoutes(currentLocation, destinationLocation);
-        call.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(model);
-    }
 
     @Override
     public void onQuerryTextEdited(String currentQuerryString) {
@@ -83,6 +62,7 @@ public class SearchPresenterImpl implements ISearchPresenter, ISearchCallback {
 
     @Override
     public void setSearchField(EditText editText) {
+
         this.view.activateQuerryChangesListening(editText);
     }
 }

@@ -1,7 +1,7 @@
 package com.ostan.heretestapp.screens.mainscreen;
 
 import com.ostan.heretestapp.pojo.LocationWrapper;
-import com.ostan.heretestapp.pojo.Route;
+
 
 /**
  * Created by marco on 16/12/2016.
@@ -13,11 +13,6 @@ public interface IMapPresenterActivityCallback {
         currentLocation,
         searchedLocation
     }
-
-    /**
-     * Called when new route received
-     * */
-    void onNewRouteReceived(Route route);
 
     /**
      * Notify the presenter that activity is ready

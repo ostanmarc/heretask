@@ -26,8 +26,6 @@ import com.here.android.mpa.routing.RoutePlan;
 import com.here.android.mpa.routing.RouteResult;
 import com.ostan.heretestapp.R;
 import com.ostan.heretestapp.pojo.LocationWrapper;
-import com.ostan.heretestapp.pojo.Route;
-import com.ostan.heretestapp.pojo.Waypoint;
 import com.ostan.heretestapp.utils.ImagesHandler;
 
 import java.util.List;
@@ -61,8 +59,12 @@ public class MapViewImpl implements IMapView {
     @BindView(R.id.status_update_tv)
     TextView statusTv;
 
-    @BindView(R.id.address_tv)
-    TextView addressLine;
+    @BindView(R.id.end_address_tv)
+    TextView endAddressTv;
+
+    @BindView(R.id.start_address_tv)
+    TextView startAddressTv;
+
 
     @BindView(R.id.addresstv_holder)
     RelativeLayout address_loder;
@@ -75,18 +77,33 @@ public class MapViewImpl implements IMapView {
 
     @BindDrawable(R.drawable.ic_searched_location)
     Drawable searchedLocationIcon;
+    @BindView(R.id.address_triggers_holder)
+    LinearLayout triggersHolder;
 
+    // Markers references to prevent multiple marker creations
+    MapMarker currentLocationMarker;
+    MapMarker searchedLocationMarker;
 
-    @OnClick({R.id.addresstv_holder, R.id.address_tv})
-    public void addressClicked(){
-        if(!isAddressTriggerActive) {
+    MapRoute currentRoute;
+
+    @OnClick({R.id.addresstv_holder, R.id.end_address_tv})
+    public void addressClicked() {
+        if (!isAddressTriggerActive) {
             return;
         }
-        presenter.onAddressButtonClicked();
+        presenter.onDestinationAddressButtonClicked();
+    }
+
+    @OnClick(R.id.start_address_tv)
+    public void startLocationChangeTriggered() {
+        if (!isAddressTriggerActive) {
+            return;
+        }
+        presenter.onOriginAddressButtonClicked();
     }
 
     @OnClick(R.id.navigation_trigger)
-    public void navigationClicked(){
+    public void navigationClicked() {
         presenter.onDirectionsClicked();
     }
 
@@ -97,35 +114,43 @@ public class MapViewImpl implements IMapView {
         this.presenter = presenter;
     }
 
-    // Markers references to prevent multiple marker creations
-    MapMarker currentLocationMarker;
-    MapMarker searchedLocationMarker;
 
     private RouteManager.Listener routeManagerListener = new RouteManager.Listener() {
         public void onCalculateRouteFinished(RouteManager.Error errorCode,
                                              List<RouteResult> result) {
 
             if (errorCode == RouteManager.Error.NONE && result.get(0).getRoute() != null) {
-                // create a map route object and place it on the map
-                MapRoute mapRoute = new MapRoute(result.get(0).getRoute());
-                map.addMapObject(mapRoute);
 
-                // Get the bounding box containing the route and zoom in (no animation)
+                // create a map route object and place it on the map
+                if (currentRoute != null) {
+                    map.removeMapObject(currentRoute);
+                }
+
+                currentRoute = new MapRoute(result.get(0).getRoute());
+                map.addMapObject(currentRoute);
+
                 GeoBoundingBox gbb = result.get(0).getRoute().getBoundingBox();
                 map.zoomTo(gbb, Map.Animation.NONE, Map.MOVE_PRESERVE_ORIENTATION);
-
-//                textViewResult.setText(String.format("Route calculated with %d maneuvers.",
-//                        result.get(0).getRoute().getManeuvers().size()));
+                hideStatusDelayed();
             } else {
-//                textViewResult.setText(
-//                        String.format("Route calculation failed: %s", errorCode.toString()));
+                showStatus(String.format("Route calculation failed: %s", errorCode.toString()));
+                hideStatusDelayed();
             }
         }
 
         public void onProgress(int percentage) {
-            updateStatus(String.format("... %d percent done ...", percentage));
+            showStatus(String.format("... %d percent done ...", percentage));
         }
     };
+
+    private void hideStatusDelayed() {
+        statusHolder.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                hideStatus();
+            }
+        }, 3000);
+    }
 
     @Override
     public void showStatus(String statusLine) {
@@ -160,9 +185,9 @@ public class MapViewImpl implements IMapView {
         object.setCoordinate(location.getGeoCoordinate());
 
         Image image = new Image();
-        switch (type){
+        switch (type) {
             case currentLocation: {
-                image.setBitmap(ImagesHandler.getBitmapFromVectorDrawable(navigationTrigger.getContext(),R.drawable.ic_current_location));
+                image.setBitmap(ImagesHandler.getBitmapFromVectorDrawable(navigationTrigger.getContext(), R.drawable.ic_current_location));
                 if (currentLocationMarker != null) {
                     map.removeMapObject(currentLocationMarker);
                 }
@@ -171,7 +196,7 @@ public class MapViewImpl implements IMapView {
             }
             break;
             case searchedLocation: {
-                image.setBitmap(ImagesHandler.getBitmapFromVectorDrawable(navigationTrigger.getContext(),R.drawable.ic_searched_location));
+                image.setBitmap(ImagesHandler.getBitmapFromVectorDrawable(navigationTrigger.getContext(), R.drawable.ic_searched_location));
                 if (searchedLocationMarker != null) {
                     map.removeMapObject(searchedLocationMarker);
                 }
@@ -187,33 +212,31 @@ public class MapViewImpl implements IMapView {
     }
 
     @Override
-    public void drawRoute(Route route) {
-        // 2. Initialize RouteManager
+    public void drawRoute() {
+
+
         RouteManager routeManager = new RouteManager();
-
-
-
-        // 3. Select routing options
-        RoutePlan routePlan = new RoutePlan();
-
-
 
         RouteOptions routeOptions = new RouteOptions();
 
+        RoutePlan routePlan = new RoutePlan();
+
+        routeOptions.setRouteCount(10);
+
         routeOptions.setTransportMode(RouteOptions.TransportMode.CAR);
         routeOptions.setRouteType(RouteOptions.Type.FASTEST);
+        routeOptions.setTollRoadsAllowed(true);
+
+
         routePlan.setRouteOptions(routeOptions);
+        routePlan.addWaypoint(currentLocationMarker.getCoordinate());
+        routePlan.addWaypoint(searchedLocationMarker.getCoordinate());
 
-        for (Waypoint waypoint : route.getWaypoint()) {
-            routePlan.addWaypoint(new GeoCoordinate(waypoint.getMappedPosition().getLatitude(),
-                    waypoint.getMappedPosition().getLongitude()));
-        }
 
-        // 5. Retrieve Routing information via RouteManagerEventListener
         RouteManager.Error error = routeManager.calculateRoute(routePlan, routeManagerListener);
         if (error != RouteManager.Error.NONE) {
-            Toast.makeText(addressLine.getContext(),
-                    "Route calculation failed with: " + error.toString(), Toast.LENGTH_SHORT)
+            Toast.makeText(endAddressTv.getContext(),
+                    "RoutePojo calculation failed with: " + error.toString(), Toast.LENGTH_SHORT)
                     .show();
         }
     }
@@ -225,13 +248,24 @@ public class MapViewImpl implements IMapView {
 
     @Override
     public void activateSearchControll(boolean shouldActivate) {
+        triggersHolder.setVisibility(shouldActivate ? View.VISIBLE : View.INVISIBLE);
         isAddressTriggerActive = shouldActivate;
     }
 
-    @Override
-    public void setAddressLine(String addressText) {
-        addressLine.setText(addressText);
+    public void setDestinationAddressTv(String addressText) {
+        endAddressTv.setText(addressText);
     }
+
+    @Override
+    public void setOriginAddressTv(String addressLine) {
+        startAddressTv.setText(addressLine);
+    }
+
+    public void setStartAddressTv(String addressText) {
+        startAddressTv.setText(addressText);
+        startAddressTv.setVisibility(View.VISIBLE);
+    }
+
 
     @Override
     public void showDirectionsTrigger(boolean toShow) {
@@ -269,8 +303,6 @@ public class MapViewImpl implements IMapView {
 
 
     }
-
-
 
 
 }

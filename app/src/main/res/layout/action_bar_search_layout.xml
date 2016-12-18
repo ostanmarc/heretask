@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:layout_margin="0dp"
     android:background="@color/colorPrimary"
     android:orientation="horizontal">
 
@@ -33,7 +32,7 @@
             android:layout_weight="10"
             android:lines="1"
             android:hint="@string/default_search_string_value"
-            android:textColorHint="#ffffff"
+            android:textColorHint="@color/hintColor"
             android:textColor="#FFFFFF"
             android:textSize="16dp" />
 

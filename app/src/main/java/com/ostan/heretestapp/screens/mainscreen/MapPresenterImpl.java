@@ -6,8 +6,9 @@ import android.util.Log;
 import android.view.View;
 
 import com.here.android.mpa.common.GeoCoordinate;
+import com.ostan.heretestapp.R;
 import com.ostan.heretestapp.pojo.LocationWrapper;
-import com.ostan.heretestapp.pojo.Route;
+import com.ostan.heretestapp.screens.searchscreen.SearchActivity;
 
 /**
  * Created by marco on 16/12/2016.
@@ -24,7 +25,7 @@ public class MapPresenterImpl implements IMapPresenter, IMapPresenterActivityCal
         Default, // No current currentLocation found controlls disabled
         Located, // Current currentLocation found
         AddressSelected, // Destination point selected
-        RouteSelected// Route for the ride is selected
+        RouteSelected// RoutePojo for the ride is selected
     }
 
     MapScreenState state;
@@ -36,11 +37,6 @@ public class MapPresenterImpl implements IMapPresenter, IMapPresenterActivityCal
 
     }
 
-
-    @Override
-    public void onNewRouteReceived(Route route) {
-        view.drawRoute(route);
-    }
 
     @Override
     public void onActivityReady() {
@@ -56,9 +52,15 @@ public class MapPresenterImpl implements IMapPresenter, IMapPresenterActivityCal
 
         if(type == LocationType.currentLocation) {
             currentLocation = locationWrapper.getLocation();
+            if(locationWrapper.getItem() == null) {
+                view.setOriginAddressTv(activity.getString(R.string.default_value_origin_address));
+            } else {
+                view.setOriginAddressTv(locationWrapper.getItem().getTitle());
+            }
+
         } else {
             destinationLocation = locationWrapper.getLocation();
-            view.setAddressLine(locationWrapper.getItem().getTitle());
+            view.setDestinationAddressTv(locationWrapper.getItem().getTitle());
         }
 
         view.focusOnPoint(coordinate);
@@ -69,19 +71,30 @@ public class MapPresenterImpl implements IMapPresenter, IMapPresenterActivityCal
     }
 
     @Override
-    public void onAddressButtonClicked() {
+    public void onOriginAddressButtonClicked() {
 
         if(state == MapScreenState.Default) {
             // I want to prevent address search before the current currentLocation received
             // in order to provde more precise search results
             return;
         }
-        activity.fireAddressSearch(currentLocation);
+        activity.fireAddressSearch(currentLocation, SearchActivity.RunningMode.startPointSearch);
+    }
+
+    @Override
+    public void onDestinationAddressButtonClicked() {
+
+        if(state == MapScreenState.Default) {
+            // I want to prevent address search before the current currentLocation received
+            // in order to provde more precise search results
+            return;
+        }
+        activity.fireAddressSearch(currentLocation, SearchActivity.RunningMode.addressSearch);
     }
 
     @Override
     public void onCurrentLocationClicked() {
-        view.showStatus("Finding your current LocationModel");
+        view.showStatus("Finding your current Location");
         activity.determineCurrentLocation();
     }
 
@@ -92,7 +105,7 @@ public class MapPresenterImpl implements IMapPresenter, IMapPresenterActivityCal
 
     @Override
     public void onDirectionsClicked() {
-        activity.fireRouteSearch(currentLocation, destinationLocation);
+        view.drawRoute();
     }
 
     @Override

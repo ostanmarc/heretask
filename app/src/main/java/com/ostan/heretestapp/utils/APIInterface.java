@@ -1,16 +1,12 @@
 package com.ostan.heretestapp.utils;
 
 import com.ostan.heretestapp.pojo.APIResult;
-import com.ostan.heretestapp.pojo.AutoSuggestResult;
 import com.ostan.heretestapp.pojo.AddressSearchResponse;
-import com.ostan.heretestapp.pojo.RoutesSearchResponse;
-
-import java.util.HashMap;
+import com.ostan.heretestapp.pojo.AutoSuggestResult;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import retrofit2.http.QueryMap;
 import rx.Observable;
 
 /**
@@ -37,8 +33,5 @@ public interface APIInterface {
 
     @GET(PATH+SEARCH)
     public Observable<AddressSearchResponse> searchReactive(@Query("q") String querry, @Query("at") String location, @Query("size") int size);
-
-    @GET(ROUTES_PATH + ROUTES_JSON)
-    public Observable<RoutesSearchResponse> searchRoutes(@QueryMap HashMap<String, String> requestParams);
 
 }

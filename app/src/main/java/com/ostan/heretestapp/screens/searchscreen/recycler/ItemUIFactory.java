@@ -11,7 +11,7 @@ import com.ostan.heretestapp.R;
  */
 public class ItemUIFactory {
 
-    public static ItemViewHolder createUIForSession(ViewGroup parent, int itemType, ICardsEventsListener listener) {
+    public static ItemViewHolder createUIForSession(ViewGroup parent, int itemType, IResultCardsEventsListener listener) {
 
         ItemViewHolder vh = null;
         switch (itemType){
@@ -23,9 +23,7 @@ public class ItemUIFactory {
             }
             break;
             case 1:{
-                View itemView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.search_result_route_item, parent, false);
-                vh = new RouteItemViewHolder(itemView, listener);
+
             }
             break;
             case 2:{

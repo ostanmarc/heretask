@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.ostan.heretestapp.R;
 import com.ostan.heretestapp.pojo.AbstractResponseItem;
 import com.ostan.heretestapp.pojo.Item;
-import com.ostan.heretestapp.pojo.Route;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,12 +25,12 @@ public class ItemViewHolder  extends RecyclerView.ViewHolder   {
     LinearLayout rootView;
 
 
-    ICardsEventsListener listener;
+    IResultCardsEventsListener listener;
     public Item item;
 
 
 
-    public ItemViewHolder(View view, ICardsEventsListener listener) {
+    public ItemViewHolder(View view, IResultCardsEventsListener listener) {
         super(view);
         ButterKnife.bind(this, view);
         this.listener = listener;
@@ -44,18 +43,11 @@ public class ItemViewHolder  extends RecyclerView.ViewHolder   {
             @Override
             public void onClick(View v) {
                 listener.onCardWasClicked(item);
-
                 if(item instanceof Item){
                     Item internalItem = (Item) item;
                     String latitude = "Latitude: " + + internalItem.getPosition().get(0);
                     String longitude = "Longitude: " + internalItem.getPosition().get(1);
                     Log.i("location", "Clicked on item located at Lat: "+latitude+"  lon: " + longitude);
-                } else {
-                    Route route = (Route) item;
-                    String description = "Description: " + route.getDescription();
-                    String title = "Title: " + route.getSummary();
-
-                    Log.i("location", "Clicked on route\n "+ description + " \n " + title );
                 }
             }
         });
