@@ -1,6 +1,6 @@
 package com.ostan.heretestapp.screens.searchscreen;
 
-import com.ostan.heretestapp.models.AutoSuggestResult;
+import com.ostan.heretestapp.pojo.AbstractResponseItem;
 
 /**
  * Created by marco on 17/12/2016.
@@ -8,5 +8,5 @@ import com.ostan.heretestapp.models.AutoSuggestResult;
 
 public interface ISearchPresenter {
     public void onQuerryTextEdited(String currentQuerryString);
-    public void onResultClicked(AutoSuggestResult selectedResult);
+    public void onResultClicked(AbstractResponseItem selectedResult);
 }

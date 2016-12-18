@@ -13,7 +13,7 @@ public interface IMapPresenter {
     void onAddressButtonClicked();
 
     /**
-     * Notify presenter that current location has been clicked
+     * Notify presenter that current currentLocation has been clicked
      * */
     void onCurrentLocationClicked();
 

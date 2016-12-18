@@ -1,4 +1,4 @@
-package com.ostan.heretestapp.models;
+package com.ostan.heretestapp.pojo;
 
 /**
  * Created by marco on 17/12/2016.
@@ -7,9 +7,10 @@ package com.ostan.heretestapp.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class AutoSuggestResult {
+public class AutoSuggestResult implements Serializable {
 
     @SerializedName("title")
     @Expose
@@ -35,6 +36,8 @@ public class AutoSuggestResult {
     @SerializedName("type")
     @Expose
     private String type;
+
+
 
     public String getTitle() {
         return title;

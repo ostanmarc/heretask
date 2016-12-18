@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="50dp"
+    android:layout_margin="0dp"
     android:background="@color/colorPrimary"
     android:orientation="horizontal">
 
@@ -24,7 +25,7 @@
         android:layout_weight="10">
 
         <EditText
-            android:id="@+id/address_tv"
+            android:id="@+id/address_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

@@ -1,21 +1,23 @@
 package com.ostan.heretestapp.screens.mainscreen;
 
-import android.location.Location;
+import com.ostan.heretestapp.pojo.LocationWrapper;
+import com.ostan.heretestapp.pojo.Route;
 
 /**
  * Created by marco on 16/12/2016.
  */
 
 public interface IMapPresenterActivityCallback {
-    /**
-     * Called when new address received
-     * */
-    void onNewAddressReceived();
+
+    public static enum LocationType{
+        currentLocation,
+        searchedLocation
+    }
 
     /**
      * Called when new route received
      * */
-    void onNewRouteReceived();
+    void onNewRouteReceived(Route route);
 
     /**
      * Notify the presenter that activity is ready
@@ -26,5 +28,5 @@ public interface IMapPresenterActivityCallback {
     /**
      * Notify the presenter about new coordinates that were received*/
 
-    void onNewLocationRecieved(Location location);
+    void onNewLocationRecieved(LocationWrapper locationWrapper, LocationType type);
 }

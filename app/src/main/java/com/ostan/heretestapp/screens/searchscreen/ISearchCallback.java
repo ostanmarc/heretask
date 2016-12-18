@@ -10,7 +10,7 @@ import java.util.List;
  * Created by marco on 17/12/2016.
  */
 
-public interface ISearchView {
-    public void addAddressItem(List<AbstractResponseItem> item);
-    public void activateQuerryChangesListening(EditText et);
+public interface ISearchCallback {
+    public void onNewResponseArrived(List<AbstractResponseItem> items);
+    public void setSearchField(EditText editText);
 }

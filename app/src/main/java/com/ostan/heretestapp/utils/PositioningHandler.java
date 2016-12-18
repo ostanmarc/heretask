@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 
 /**
  * Created by marco on 16/12/2016.
@@ -78,6 +79,8 @@ public class PositioningHandler implements PermissionsHandler.IPermissionDepende
 
             String longitude = "Longitude: " + loc.getLongitude();
             String latitude = "Latitude: " + loc.getLatitude();
+
+            Log.i("location", "Lat: "+latitude+"  lon: " + longitude);
             requester.onLocationReceive(loc);
 
         }
