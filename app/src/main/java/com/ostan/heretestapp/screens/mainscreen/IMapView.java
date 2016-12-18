@@ -1,12 +1,14 @@
 package com.ostan.heretestapp.screens.mainscreen;
 
-import android.location.Location;
+import com.here.android.mpa.common.GeoCoordinate;
+import com.ostan.heretestapp.pojo.LocationWrapper;
 
 /**
  * Created by marco on 16/12/2016.
  */
 
 public interface IMapView {
+
     /**
      * Show status UI element notifying the user that something is happening
      * @param  statusLine - text that user will see
@@ -27,11 +29,16 @@ public interface IMapView {
     /**
      * Focus Map on provided point
      * */
-    //TODO add the obect to the signature and to the remark
-    void focusOnPoint(Location location);
+    void focusOnPoint(GeoCoordinate location);
+
 
     /**
-     * Draw provided route on the map
+     * Focus Map on provided point
+     * */
+    void addMarkerToTheMap(LocationWrapper locationWrapper, IMapPresenterActivityCallback.LocationType type);
+
+    /**
+     * Draw provided routePojo on the map
      * */
     void drawRoute();
 
@@ -42,10 +49,23 @@ public interface IMapView {
     void showNearbyControll(boolean toShow);
 
     /**
+     * Activate\Deactivate address search
+     * @param  shouldActivate - to hide or to show
+     * */
+    void activateSearchControll(boolean shouldActivate);
+
+
+    /**
      * Set the address line that map is focused on
      * @param  addressLine = text to be inserted
      * */
-    void setAddressLine(String addressLine);
+    void setDestinationAddressTv(String addressLine);
+
+    /**
+     * Set the address line that map is focused on
+     * @param  addressLine = text to be inserted
+     * */
+    void setOriginAddressTv(String addressLine);
 
     /**
      * Show/Hide directions' search trigger

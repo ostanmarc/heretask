@@ -10,10 +10,16 @@ public interface IMapPresenter {
     /**
      * Notify presenter that address button has been clicked
      * */
-    void onAddressButtonClicked();
+    void onDestinationAddressButtonClicked();
 
     /**
-     * Notify presenter that current location has been clicked
+     * Notify presenter that address button has been clicked
+     * */
+    void onOriginAddressButtonClicked();
+
+
+    /**
+     * Notify presenter that current currentLocation has been clicked
      * */
     void onCurrentLocationClicked();
 
